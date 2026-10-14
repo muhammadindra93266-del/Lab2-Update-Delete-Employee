@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Employee</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 32px; }
+        input { margin: 5px 0 14px; padding: 7px; }
+        table { border-collapse: collapse; width: 100%; max-width: 900px; margin-top: 12px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background: #f2f2f2; }
+        button, .edit-button { padding: 7px 10px; border: 0; border-radius: 4px; cursor: pointer; text-decoration: none; }
+        .save-button { background: #198754; color: white; }
+        .edit-button { background: #0d6efd; color: white; display: inline-block; }
+        .delete-button { background: #dc3545; color: white; }
+        form.inline { display: inline; }
+    </style>
+</head>
+<body>
+    <h2>Tambah Employee Baru</h2>
+    <form action="{{ url_for('employee_bp.submit_form') }}" method="POST">
+        <label for="name">Nama:</label><br>
+        <input id="name" type="text" name="name" required><br>
+        <label for="position">Posisi:</label><br>
+        <input id="position" type="text" name="position" value="Staff"><br>
+        <label for="salary">Gaji:</label><br>
+        <input id="salary" type="number" name="salary" min="0" value="0" required><br>
+        <button class="save-button" type="submit">Simpan Employee</button>
+    </form>
+
+    <h3>Daftar Employee</h3>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nama</th><th>Posisi</th><th>Gaji</th><th>Aksi</th></tr>
+        </thead>
+        <tbody>
+        {% for e in employees %}
+            <tr>
+                <td>{{ e.id }}</td>
+                <td>{{ e.name }}</td>
+                <td>{{ e.position }}</td>
+                <td>Rp{{ "{:,.0f}".format(e.salary) }}</td>
+                <td>
+                    <a class="edit-button" href="{{ url_for('employee_bp.edit_form', id=e.id) }}">Update</a>
+                    <form class="inline" action="{{ url_for('employee_bp.delete_employee', id=e.id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus employee ini?');">
+                        <button class="delete-button" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Belum ada data employee.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
